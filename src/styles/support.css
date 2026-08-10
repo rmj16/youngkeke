@@ -31,3 +31,30 @@
 
 @media(max-width:1020px){.support-topbar{padding:0 28px}.support-topbar nav{display:none}.support-workspace{grid-template-columns:210px minmax(0,1fr);gap:22px}.faq-categories{grid-template-columns:repeat(3,1fr)}.faq-categories button{border-bottom:1px solid #e4e8ec}.customer-board-wrap{overflow:auto}.board-title-cell strong{max-width:260px}}
 @media(max-width:720px){.support-topbar{height:64px;padding:0 17px}.support-topbar .air-emblem{transform:scale(.82);transform-origin:left center;margin-right:-5px}.support-topbar .air-wordmark strong{font-size:15px}.support-topbar .air-wordmark small{font-size:7px}.support-user>div{display:none}.support-title-band{min-height:170px;padding:30px 20px}.support-title-band h1{font-size:29px}.support-title-band p{font-size:12px}.support-workspace{width:100%;margin:0 0 50px;display:block}.support-side-menu{position:static;border:0;border-radius:0;box-shadow:none;display:grid;grid-template-columns:1fr 1fr;padding:12px}.side-title,.side-status,.support-contact-card{display:none}.support-side-menu>button{border:1px solid #e1e6eb!important;border-radius:5px;margin:0 3px;padding:10px}.support-side-menu>button b,.support-side-menu>button small{display:none}.support-panel{padding:20px 14px}.support-panel-heading{align-items:flex-start}.support-panel-heading h2{font-size:22px}.support-panel-heading p{font-size:10px}.write-inquiry-button{padding:0 14px}.board-summary>div{padding:13px 10px;flex-direction:column;gap:5px}.board-summary strong{margin:0;font-size:18px}.faq-categories{grid-template-columns:repeat(2,1fr)}.faq-list article>button{grid-template-columns:28px 62px 1fr 22px;padding:12px 8px}.faq-answer{padding:18px 20px}.support-simple-footer{padding:25px 20px;flex-direction:column;align-items:flex-start;gap:12px}.support-simple-footer nav{margin:0}.customer-modal-backdrop{padding:8px}.customer-modal form,.customer-modal-head{padding-left:18px;padding-right:18px}}
+
+/* Youngkeke Air brand palette */
+.support-center-page{--yk-blue:#07418c;--yk-blue-dark:#052f69;--yk-blue-mid:#1d67b4;--yk-blue-soft:#eaf2fc;--yk-blue-pale:#f4f8fd}
+.support-center-page .air-emblem i{background:linear-gradient(90deg,#3b82cf 0%,var(--yk-blue) 72%,var(--yk-blue-dark) 100%)}
+.support-center-page .air-wordmark small{color:var(--yk-blue)}
+.support-center-page .brand-mark.inverse .air-wordmark small{color:#9bc8fa}
+.support-center-page .brand-mark.inverse .air-emblem i{background:linear-gradient(90deg,#d9ebff,#82b9f4 55%,#fff)}
+.support-topbar nav button.active{border-color:var(--yk-blue);color:var(--yk-blue)}
+.support-user>span{background:var(--yk-blue-soft);color:var(--yk-blue)}
+.support-title-band{background:linear-gradient(115deg,#041f45 0%,var(--yk-blue) 58%,#0c5bb3 100%)}
+.support-title-band span{color:#b9d8fa}.support-title-band p{color:#e2effd}
+.side-title small{color:var(--yk-blue)}
+.support-side-menu>button.active{border-left-color:var(--yk-blue);background:var(--yk-blue-soft);color:var(--yk-blue-dark)}
+.support-side-menu>button.active .side-icon{background:#d8e8fb;color:var(--yk-blue)}
+.support-contact-card{border-color:#cbdcf1}.support-contact-card strong{color:var(--yk-blue)}
+.support-panel-heading>div>span{color:var(--yk-blue)}
+.write-inquiry-button{background:var(--yk-blue);box-shadow:0 5px 12px rgba(7,65,140,.2)}.write-inquiry-button:hover{background:var(--yk-blue-dark)}
+.board-filter button.active{border-color:var(--yk-blue);background:var(--yk-blue)}
+.row-actions button:hover{border-color:var(--yk-blue);color:var(--yk-blue)}
+.board-detail-row span,.board-detail-row section strong{color:var(--yk-blue)}.board-detail-row section{border-left-color:var(--yk-blue)}
+.board-note{background:var(--yk-blue-soft)}.board-note span{color:var(--yk-blue)}
+.faq-search>span{color:var(--yk-blue)}
+.faq-categories button.active{background:var(--yk-blue)}
+.faq-list article>button>span,.faq-answer>span{background:var(--yk-blue-soft);color:var(--yk-blue)}
+.faq-list article small{color:var(--yk-blue)}.faq-answer>span{background:var(--yk-blue);color:#fff}
+.customer-modal-head span{color:var(--yk-blue)}
+.modal-buttons button[type="submit"]{border-color:var(--yk-blue);background:var(--yk-blue)}
