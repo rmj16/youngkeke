@@ -20,8 +20,10 @@ import {
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export function HeroSection() {
+  const navigate = useNavigate();
   const [isRoundTrip, setIsRoundTrip] = useState(true);
   const [fromCity, setFromCity] = useState("");
   const [toCity, setToCity] = useState("");
@@ -270,6 +272,7 @@ export function HeroSection() {
 
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
+                      onClick={() => navigate("/booking")}
                       className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 h-14 shadow-lg hover:shadow-xl transition-all duration-300"
                       size="lg"
                     >

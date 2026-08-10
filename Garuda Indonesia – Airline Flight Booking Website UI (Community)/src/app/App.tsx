@@ -9,6 +9,7 @@ import { SignupPage } from "./pages/SignupPage";
 import { InquiryPage } from "./pages/InquiryPage";
 import { AdminPage } from "./pages/AdminPage";
 import { MyPage } from "./pages/MyPage";
+import { BookingFlow } from "./pages/BookingFlow";
 import { useEffect } from "react";
 
 // 마케팅 페이지 공통 레이아웃 (Header + Footer)
@@ -48,6 +49,9 @@ export default function App() {
         {/* 관리자 (inquires 통합) */}
         <Route path="/admin" element={<AdminPage view="dashboard" />} />
         <Route path="/admin/inquiries" element={<AdminPage view="admin-inquiries" />} />
+
+        {/* 항공권 예약(부킹) 플로우 (booking 통합) */}
+        <Route path="/booking" element={<BookingFlow />} />
 
         {/* 마이페이지 (mypage 통합) */}
         <Route path="/mypage" element={<MyPage />} />
