@@ -42,7 +42,9 @@ export function Header() {
       navigate("/");
       // 라우팅 후 DOM이 준비되면 스크롤
       setTimeout(() => {
-        document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+        document
+          .getElementById(sectionId)
+          ?.scrollIntoView({ behavior: "smooth" });
       }, 100);
       return;
     }
@@ -56,7 +58,7 @@ export function Header() {
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? "backdrop-blur-lg bg-white/80 shadow-lg border-b border-white/20"
+            ? "backdrop-blur-lg bg-[#034C8C]/95 shadow-lg border-b border-[#07418C]"
             : "bg-transparent"
         }`}
       >
@@ -69,9 +71,11 @@ export function Header() {
               onClick={goHome}
             >
               <div className="flex-shrink-0">
-                <h1 className={`text-2xl font-bold transition-colors duration-300 ${
-                  isScrolled ? "text-blue-600" : "text-white"
-                }`}>
+                <h1
+                  className={`text-2xl font-bold transition-colors duration-300 ${
+                    isScrolled ? "text-white" : "text-white"
+                  }`}
+                >
                   Garuda Indonesia
                 </h1>
               </div>
@@ -82,24 +86,26 @@ export function Header() {
               <div className="ml-10 flex items-baseline space-x-8">
                 {[
                   { name: "항공권 예약", id: "book" },
-                  { name: "예약 조회", path: "/inquiry" },
+                  { name: "고객지원", path: "/inquiry" },
                   { name: "취항지", id: "destinations" },
                   { name: "회사소개", id: "about" },
-                  { name: "마이페이지", path: "/mypage" }
+                  { name: "마이페이지", path: "/mypage" },
                 ].map((item) => (
                   <motion.button
                     key={item.name}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => (item.path ? goTo(item.path) : scrollToSection(item.id!))}
+                    onClick={() =>
+                      item.path ? goTo(item.path) : scrollToSection(item.id!)
+                    }
                     className={`px-3 py-2 transition-colors duration-300 relative group ${
                       isScrolled
-                        ? "text-gray-900 hover:text-blue-600"
+                        ? "text-white/90 hover:text-white"
                         : "text-white/90 hover:text-white"
                     }`}
                   >
                     {item.name}
-                    <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
+                    <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-[#A0BED9] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                   </motion.button>
                 ))}
               </div>
@@ -107,14 +113,17 @@ export function Header() {
 
             {/* Right side buttons */}
             <div className="hidden md:flex items-center space-x-3">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => goTo("/login")}
                   className={`transition-colors duration-300 ${
                     isScrolled
-                      ? "text-gray-900 hover:text-blue-600 hover:bg-blue-50"
+                      ? "text-white/90 hover:text-white hover:bg-white/10"
                       : "text-white/90 hover:text-white hover:bg-white/20"
                   }`}
                 >
@@ -122,11 +131,14 @@ export function Header() {
                   로그인
                 </Button>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Button
                   size="sm"
                   onClick={() => goTo("/signup")}
-                  className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-300"
+                  className="bg-[#A0BED9] hover:bg-white text-[#07418C] font-semibold transition-colors duration-300"
                 >
                   회원가입
                 </Button>
@@ -142,7 +154,7 @@ export function Header() {
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className={`transition-colors duration-300 ${
                     isScrolled
-                      ? "text-gray-900 hover:text-blue-600"
+                      ? "text-white hover:text-[#A0BED9]"
                       : "text-white/90 hover:text-white"
                   }`}
                 >
@@ -167,29 +179,38 @@ export function Header() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed top-16 left-0 right-0 z-40 md:hidden"
           >
-            <div className="backdrop-blur-lg bg-white/95 shadow-xl border-b border-white/20 px-4 py-6">
+            <div className="backdrop-blur-lg bg-[#F2F2F2]/97 shadow-xl border-b border-[#A0BED9] px-4 py-6">
               <div className="space-y-4">
                 {[
                   { name: "항공권 예약", id: "book" },
                   { name: "예약 조회", path: "/inquiry" },
                   { name: "취항지", id: "destinations" },
                   { name: "회사소개", id: "about" },
-                  { name: "마이페이지", path: "/mypage" }
+                  { name: "마이페이지", path: "/mypage" },
                 ].map((item) => (
                   <motion.button
                     key={item.name}
                     whileHover={{ x: 10 }}
-                    onClick={() => (item.path ? goTo(item.path) : scrollToSection(item.id!))}
-                    className="block w-full text-left px-3 py-2 text-gray-900 hover:text-blue-600 transition-colors"
+                    onClick={() =>
+                      item.path ? goTo(item.path) : scrollToSection(item.id!)
+                    }
+                    className="block w-full text-left px-3 py-2 text-[#07418C] hover:text-[#034C8C] transition-colors"
                   >
                     {item.name}
                   </motion.button>
                 ))}
                 <div className="border-t pt-4 mt-4 space-y-3">
-                  <Button variant="outline" className="w-full" onClick={() => goTo("/login")}>
+                  <Button
+                    variant="outline"
+                    className="w-full border-[#034C8C] text-[#034C8C] hover:bg-[#034C8C] hover:text-white"
+                    onClick={() => goTo("/login")}
+                  >
                     로그인
                   </Button>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={() => goTo("/signup")}>
+                  <Button
+                    className="w-full bg-[#07418C] hover:bg-[#264F73] text-white"
+                    onClick={() => goTo("/signup")}
+                  >
                     회원가입
                   </Button>
                 </div>
