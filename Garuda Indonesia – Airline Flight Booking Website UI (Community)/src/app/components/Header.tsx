@@ -82,15 +82,16 @@ export function Header() {
               <div className="ml-10 flex items-baseline space-x-8">
                 {[
                   { name: "항공권 예약", id: "book" },
-                  { name: "서비스", id: "services" },
+                  { name: "예약 조회", path: "/inquiry" },
                   { name: "취항지", id: "destinations" },
-                  { name: "회사소개", id: "about" }
+                  { name: "회사소개", id: "about" },
+                  { name: "마이페이지", path: "/mypage" }
                 ].map((item) => (
                   <motion.button
-                    key={item.id}
+                    key={item.name}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => scrollToSection(item.id)}
+                    onClick={() => (item.path ? goTo(item.path) : scrollToSection(item.id!))}
                     className={`px-3 py-2 transition-colors duration-300 relative group ${
                       isScrolled
                         ? "text-gray-900 hover:text-blue-600"
@@ -170,14 +171,15 @@ export function Header() {
               <div className="space-y-4">
                 {[
                   { name: "항공권 예약", id: "book" },
-                  { name: "서비스", id: "services" },
+                  { name: "예약 조회", path: "/inquiry" },
                   { name: "취항지", id: "destinations" },
-                  { name: "회사소개", id: "about" }
+                  { name: "회사소개", id: "about" },
+                  { name: "마이페이지", path: "/mypage" }
                 ].map((item) => (
                   <motion.button
-                    key={item.id}
+                    key={item.name}
                     whileHover={{ x: 10 }}
-                    onClick={() => scrollToSection(item.id)}
+                    onClick={() => (item.path ? goTo(item.path) : scrollToSection(item.id!))}
                     className="block w-full text-left px-3 py-2 text-gray-900 hover:text-blue-600 transition-colors"
                   >
                     {item.name}
