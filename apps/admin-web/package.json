@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite"
+    "build": "vite build --configLoader runner",
+    "dev": "vite --configLoader runner"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
