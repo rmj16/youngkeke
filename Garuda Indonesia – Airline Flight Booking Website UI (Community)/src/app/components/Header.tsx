@@ -1,224 +1,56 @@
 "use client";
 
-import { Button } from "./ui/button";
-import { Menu, User, X } from "lucide-react";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate, useLocation } from "react-router";
+import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router";
 
-export function Header() {
+export type HeaderUser = { name: string };
+
+const navigation = [
+  { label: "항공권 예약", to: "/booking" },
+  { label: "예약 조회", to: "/booking" },
+  { label: "고객지원", to: "/inquiry" },
+  { label: "마이페이지", to: "/mypage" },
+];
+
+export function Header({ user = null }: { user?: HeaderUser | null }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const goHome = () => {
-    setIsMobileMenuOpen(false);
-    if (location.pathname !== "/") {
-      navigate("/");
-    }
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const goTo = (path: string) => {
-    setIsMobileMenuOpen(false);
-    navigate(path);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    setIsMobileMenuOpen(false);
-    // 섹션은 홈에만 존재하므로, 다른 페이지라면 홈으로 이동 후 스크롤
-    if (location.pathname !== "/") {
-      navigate("/");
-      // 라우팅 후 DOM이 준비되면 스크롤
-      setTimeout(() => {
-        document
-          .getElementById(sectionId)
-          ?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-      return;
-    }
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-  };
+  useEffect(() => setIsMobileMenuOpen(false), [location.pathname]);
 
   return (
-    <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "backdrop-blur-lg bg-[#034C8C]/95 shadow-lg border-b border-[#07418C]"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center cursor-pointer"
-              onClick={goHome}
-            >
-              <div className="flex-shrink-0">
-                <h1
-                  className={`text-2xl font-bold transition-colors duration-300 ${
-                    isScrolled ? "text-white" : "text-white"
-                  }`}
-                >
-                  Garuda Indonesia
-                </h1>
-              </div>
-            </motion.div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                {[
-                  { name: "항공권 예약", id: "book" },
-                  { name: "고객지원", path: "/inquiry" },
-                  { name: "취항지", id: "destinations" },
-                  { name: "회사소개", id: "about" },
-                  { name: "마이페이지", path: "/mypage" },
-                ].map((item) => (
-                  <motion.button
-                    key={item.name}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() =>
-                      item.path ? goTo(item.path) : scrollToSection(item.id!)
-                    }
-                    className={`px-3 py-2 transition-colors duration-300 relative group ${
-                      isScrolled
-                        ? "text-white/90 hover:text-white"
-                        : "text-white/90 hover:text-white"
-                    }`}
-                  >
-                    {item.name}
-                    <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-[#A0BED9] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                  </motion.button>
-                ))}
-              </div>
-            </nav>
-
-            {/* Right side buttons */}
-            <div className="hidden md:flex items-center space-x-3">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => goTo("/login")}
-                  className={`transition-colors duration-300 ${
-                    isScrolled
-                      ? "text-white/90 hover:text-white hover:bg-white/10"
-                      : "text-white/90 hover:text-white hover:bg-white/20"
-                  }`}
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  로그인
-                </Button>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  size="sm"
-                  onClick={() => goTo("/signup")}
-                  className="bg-[#A0BED9] hover:bg-white text-[#07418C] font-semibold transition-colors duration-300"
-                >
-                  회원가입
-                </Button>
-              </motion.div>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  className={`transition-colors duration-300 ${
-                    isScrolled
-                      ? "text-white hover:text-[#A0BED9]"
-                      : "text-white/90 hover:text-white"
-                  }`}
-                >
-                  {isMobileMenuOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
-                  )}
-                </Button>
-              </motion.div>
-            </div>
-          </div>
+    <header className={`common-header ${isScrolled ? "common-header--scrolled" : ""}`}>
+      <div className="common-header__inner">
+        <Link className="common-header__brand" to="/" aria-label="YOUNGKEKE AIR 홈">YOUNGKEKE AIR</Link>
+        <nav className="common-header__nav" aria-label="주요 메뉴">
+          {navigation.map((item) => <Link key={item.label} to={item.to}>{item.label}</Link>)}
+        </nav>
+        <div className="common-header__account">
+          {user ? (
+            <button type="button" className="common-header__user">{user.name} <span aria-hidden="true">▾</span></button>
+          ) : (
+            <><Link to="/login">로그인</Link><Link className="common-header__signup" to="/signup">회원가입</Link></>
+          )}
         </div>
-      </motion.header>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-16 left-0 right-0 z-40 md:hidden"
-          >
-            <div className="backdrop-blur-lg bg-[#F2F2F2]/97 shadow-xl border-b border-[#A0BED9] px-4 py-6">
-              <div className="space-y-4">
-                {[
-                  { name: "항공권 예약", id: "book" },
-                  { name: "예약 조회", path: "/inquiry" },
-                  { name: "취항지", id: "destinations" },
-                  { name: "회사소개", id: "about" },
-                  { name: "마이페이지", path: "/mypage" },
-                ].map((item) => (
-                  <motion.button
-                    key={item.name}
-                    whileHover={{ x: 10 }}
-                    onClick={() =>
-                      item.path ? goTo(item.path) : scrollToSection(item.id!)
-                    }
-                    className="block w-full text-left px-3 py-2 text-[#07418C] hover:text-[#034C8C] transition-colors"
-                  >
-                    {item.name}
-                  </motion.button>
-                ))}
-                <div className="border-t pt-4 mt-4 space-y-3">
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#034C8C] text-[#034C8C] hover:bg-[#034C8C] hover:text-white"
-                    onClick={() => goTo("/login")}
-                  >
-                    로그인
-                  </Button>
-                  <Button
-                    className="w-full bg-[#07418C] hover:bg-[#264F73] text-white"
-                    onClick={() => goTo("/signup")}
-                  >
-                    회원가입
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+        <button type="button" className="common-header__toggle" aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"} aria-expanded={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen((open) => !open)}>
+          {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+      {isMobileMenuOpen && (
+        <div className="common-header__mobile">
+          {navigation.map((item) => <Link key={item.label} to={item.to}>{item.label}</Link>)}
+          {user ? <button type="button">{user.name} ▾</button> : <div className="common-header__mobile-account"><Link to="/login">로그인</Link><Link to="/signup">회원가입</Link></div>}
+        </div>
+      )}
+    </header>
   );
 }

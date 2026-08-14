@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Info, Luggage, Plane, UserRound, X } from "lucide-react";
-import BookingHeader, { BookingProgress } from "./components/BookingHeader";
+import { BookingProgress } from "./components/BookingHeader";
 const stepNames = ["탑승자 정보", "예약자 연락처", "좌석 선택", "부가 서비스", "결제하기"];
 const blockedSeats = new Set(["2B", "3E", "5A", "5F", "7C", "8D", "10B", "11E"]);
 function Field({
@@ -86,7 +86,6 @@ methodLabel: labels[method]
 });
 };
 return <div className="booking-page">
-<BookingHeader />
 <BookingProgress step={2} />
 <div className="booking-hero">
   <div className="hero-shape" />

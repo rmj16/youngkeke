@@ -5,19 +5,6 @@ onBack
 }) {
 const flights = [booking.outbound, booking.inbound].filter(Boolean);
 return <div className="confirmation-page">
-<header className="confirmation-header">
-  <div className="brand">
-    <span className="brand-mark">
-      <span />
-      <span />
-      <span />
-    </span>
-    <span>
-      <strong>YOUNGKEKE AIR</strong>
-      <small>Fly Beyond Your Dreams</small>
-    </span>
-  </div>
-</header>
 <main className="confirmation-main">
   <div className="confirmation-hero">
     <span className="success-icon">

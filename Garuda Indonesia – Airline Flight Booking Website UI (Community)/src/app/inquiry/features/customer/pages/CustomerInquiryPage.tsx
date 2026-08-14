@@ -167,21 +167,6 @@ export function CustomerInquiryPage({
 
   return (
     <div className="support-center-page">
-      <header className="support-topbar">
-        <button className="support-logo" onClick={() => navigate("/")} aria-label="메인 페이지로 이동">
-          <BrandMark />
-        </button>
-        <nav aria-label="사용자 메뉴">
-          <button onClick={() => navigate("/")}>항공권 예약</button>
-          <button onClick={() => navigate("/")}>예약 조회</button>
-          <button className="active">고객지원</button>
-        </nav>
-        <div className="support-user">
-          <span>김</span>
-          <div><strong>{CURRENT_USER.name}</strong><small>Youngkeke Miles 회원</small></div>
-        </div>
-      </header>
-
       <section className="support-title-band">
         <div>
           <span>HOME / 고객지원</span>

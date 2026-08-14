@@ -2561,11 +2561,142 @@
 }
 
 .booking-root .booking-hero{
-  background: linear-gradient(115deg,#07418C 0%,#034C8C 60%,#264F73 100%)
+  background: transparent
 }
 
 .booking-root .flight-search-hero{
-  background: linear-gradient(115deg,#07418C 0%,#034C8C 60%,#264F73 100%)
+  background: transparent;
+  box-shadow: inset 0 -48px 80px rgba(3, 28, 51, .16)
+}
+
+/* 조회 상단 전체를 하나의 배너로 연결: 공통 헤더 + 예약 단계 + 검색 영역 */
+.booking-root .flight-selection-page{
+  position: relative;
+  isolation: isolate
+}
+
+.booking-root .flight-selection-page::before{
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: var(--public-banner-height);
+  background:
+    linear-gradient(rgba(7, 24, 39, .58), rgba(7, 24, 39, .58)),
+    url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80") center 58% / cover no-repeat
+}
+
+.booking-root .flight-selection-page .page-stepper{
+  box-sizing: border-box;
+  height: 118px;
+  padding-top: 72px;
+  color: rgba(255,255,255,.68);
+  background: transparent;
+  border-bottom: 0
+}
+
+.booking-root .flight-selection-page .flight-search-hero{
+  min-height: calc(var(--public-banner-height) - 118px)
+}
+
+.booking-root .flight-selection-page .page-stepper span:not(:last-child)::after{
+  background: rgba(255,255,255,.32)
+}
+
+.booking-root .flight-selection-page .page-stepper b{
+  color: #264f73;
+  background: rgba(255,255,255,.72)
+}
+
+.booking-root .flight-selection-page .page-stepper .active{
+  color: #fff
+}
+
+.booking-root .flight-selection-page .page-stepper .active b{
+  color: #07418c;
+  background: #fff
+}
+
+@media(max-width:750px){
+  .booking-root .flight-selection-page .page-stepper{
+    height: 110px;
+    padding-top: 64px
+  }
+
+  .booking-root .flight-selection-page::before{
+    height: var(--public-banner-height)
+  }
+
+  .booking-root .flight-selection-page .flight-search-hero{
+    min-height: calc(var(--public-banner-height) - 110px)
+  }
+}
+
+/* 탑승객 정보 화면도 조회 화면과 동일한 상단 배너를 사용합니다. */
+.booking-root .booking-page{
+  position: relative;
+  isolation: isolate
+}
+
+.booking-root .booking-page::before{
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: var(--public-banner-height);
+  background:
+    linear-gradient(rgba(7, 24, 39, .58), rgba(7, 24, 39, .58)),
+    url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80") center 58% / cover no-repeat
+}
+
+.booking-root .booking-page .page-stepper{
+  box-sizing: border-box;
+  height: 118px;
+  padding-top: 72px;
+  color: rgba(255,255,255,.68);
+  background: transparent;
+  border-bottom: 0
+}
+
+.booking-root .booking-page .page-stepper span:not(:last-child)::after{
+  background: rgba(255,255,255,.32)
+}
+
+.booking-root .booking-page .page-stepper b{
+  color: #264f73;
+  background: rgba(255,255,255,.72)
+}
+
+.booking-root .booking-page .page-stepper .active{
+  color: #fff
+}
+
+.booking-root .booking-page .page-stepper .active b{
+  color: #07418c;
+  background: #fff
+}
+
+.booking-root .booking-page .hero-shape{
+  display: none
+}
+
+.booking-root .booking-page .booking-hero{
+  min-height: calc(var(--public-banner-height) - 118px)
+}
+
+@media(max-width:750px){
+  .booking-root .booking-page .page-stepper{
+    height: 110px;
+    padding-top: 64px
+  }
+
+  .booking-root .booking-page::before{
+    height: var(--public-banner-height)
+  }
+
+  .booking-root .booking-page .booking-hero{
+    min-height: calc(var(--public-banner-height) - 110px)
+  }
 }
 
 .booking-root .booking-main{

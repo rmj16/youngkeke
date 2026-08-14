@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ArrowLeftRight, ArrowRight, CalendarDays, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import BookingHeader, { BookingProgress } from "../components/BookingHeader";
+import { BookingProgress } from "../components/BookingHeader";
 import FlightCard from "../components/FlightCard";
 const airports = {
 ICN: {
@@ -160,7 +160,6 @@ departDate: search.depart,
 returnDate: search.returnDate
 });
 return <div className="flight-selection-page">
-<BookingHeader />
 <BookingProgress step={1} />
 <section className="flight-search-hero">
   <div>

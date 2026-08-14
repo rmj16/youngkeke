@@ -16,7 +16,6 @@ import { useEffect } from "react";
 function MarketingLayout() {
   return (
     <>
-      <Header />
       <Outlet />
       <Footer />
     </>
@@ -33,6 +32,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen overflow-x-hidden">
+      {/* 세션 인증 연동 시 null 대신 실제 사용자 객체를 전달합니다. */}
+      <Header user={null} />
       <Routes>
         {/* 메인/로그인/회원가입 — Garuda 마케팅 레이아웃 */}
         <Route element={<MarketingLayout />}>

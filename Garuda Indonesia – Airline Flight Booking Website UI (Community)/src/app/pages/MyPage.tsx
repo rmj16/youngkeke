@@ -20,9 +20,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 export function MyPage() {
   const navigate = useNavigate();
 
-  const [scrolled, setScrolled] = useState(false);
   const [showTop, setShowTop] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>("profile");
 
   // 회원정보
@@ -44,7 +42,6 @@ export function MyPage() {
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 20);
       setShowTop(window.scrollY > 320);
     };
     window.addEventListener("scroll", onScroll);
@@ -55,7 +52,6 @@ export function MyPage() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setPwOpen(false);
-        setMobileOpen(false);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -116,35 +112,6 @@ export function MyPage() {
 
   return (
     <div className="mypage-root">
-      {/* Header */}
-      <header id="siteHeader" className={`site-header ${scrolled ? "scrolled" : ""}`}>
-        <div className="header-inner">
-          <button className="brand" onClick={() => navigate("/")}>Garuda Indonesia</button>
-          <nav className="desktop-nav">
-            <button onClick={() => navigate("/")}>항공권 예약</button>
-            <button onClick={() => navigate("/inquiry")}>예약 조회</button>
-            <button onClick={() => setActiveTab("booking")}>마이페이지</button>
-          </nav>
-          <div className="header-actions">
-            <button className="ghost-icon" aria-label="검색">⌕</button>
-            <button className="my-btn" onClick={() => navigate("/login")}>로그인</button>
-            <button
-              className="mobile-toggle"
-              id="menuToggle"
-              onClick={() => setMobileOpen((v) => !v)}
-            >
-              {mobileOpen ? "✕" : "☰"}
-            </button>
-          </div>
-        </div>
-        <div id="mobileMenu" className={`mobile-menu ${mobileOpen ? "open" : ""}`}>
-          <button onClick={() => { navigate("/"); }}>항공권 예약</button>
-          <button onClick={() => { navigate("/inquiry"); }}>예약 조회</button>
-          <button onClick={() => { setActiveTab("profile"); setMobileOpen(false); }}>회원정보</button>
-          <button className="mobile-primary" onClick={() => navigate("/login")}>로그인</button>
-        </div>
-      </header>
-
       {/* Hero */}
       <section className="hero">
         <div className="hero-image" />
