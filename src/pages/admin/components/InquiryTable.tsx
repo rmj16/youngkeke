@@ -1,0 +1,6 @@
+import type { Inquiry, InquiryStatus } from "@features/inquiry/types/inquiry";
+
+export function InquiryTable({ inquiries, compact=false, onSelect }: { inquiries: Inquiry[]; compact?: boolean; onSelect?: (i: Inquiry)=>void }) {
+  return <div className="table-wrap"><table><thead><tr>{!compact&&<th><input type="checkbox" aria-label="전체 선택" /></th>}<th>문의번호</th><th>문의 내용</th><th>고객</th><th>문의 유형</th><th>접수 일시</th><th>상태</th><th></th></tr></thead><tbody>{inquiries.map((i)=><tr key={i.id} onClick={()=>onSelect?.(i)} className={onSelect?"clickable":""}>{!compact&&<td><input type="checkbox" aria-label={`${i.id} 선택`} onClick={(e)=>e.stopPropagation()} /></td>}<td className="mono">{i.id}</td><td><strong>{i.title}</strong><small>{i.content}</small></td><td><div className="customer-cell"><span>{i.customer.slice(0,1)}</span>{i.customer}</div></td><td>{i.category}</td><td>{i.createdAt}</td><td><InquiryStatusBadge status={i.status}/></td><td><button className="more" aria-label="더 보기">•••</button></td></tr>)}</tbody></table>{inquiries.length===0&&<div className="empty-list">검색 조건에 맞는 문의가 없습니다.</div>}</div>;
+}
+function InquiryStatusBadge({status}:{status:InquiryStatus}) { return <span className={`status-badge ${status.replace(" ","")}`}>{status}</span>; }

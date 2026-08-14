@@ -1,0 +1,16 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+@import 'tw-animate-css';
+
+/* 1) 기반: 토큰 → 리셋 → 타이포 (순서 중요) */
+@import './base/tokens.css';
+@import './base/reset.css';
+@import './base/typography.css';
+
+/* 2) 공통 컴포넌트 스타일 */
+@import './components/header.css';
+
+/* 3) 페이지/기능별 스코프 스타일 (.booking-root / .inq-root / .mypage-root) */
+@import './pages/booking.css';
+@import './pages/inquiry.css';
+@import './pages/mypage.css';

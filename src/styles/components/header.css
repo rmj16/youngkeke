@@ -1,0 +1,49 @@
+/* 공통 헤더/네비게이션 스타일 — components/layout/Header.tsx 와 짝을 이룬다.
+   (기존 globals.css 하단에 섞여 있던 .common-header__* 규칙을 분리) */
+
+.common-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1000;
+  color: #fff;
+  background: transparent;
+  transition: background-color .3s ease, box-shadow .3s ease, backdrop-filter .3s ease;
+}
+
+.common-header--scrolled {
+  background: rgba(3, 76, 140, .96);
+  box-shadow: 0 8px 24px rgba(3, 45, 82, .2);
+  backdrop-filter: blur(12px);
+}
+
+.common-header__inner {
+  width: min(1280px, calc(100% - 48px));
+  height: 72px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.common-header a { color: inherit; text-decoration: none; }
+.common-header__brand { font-size: 21px; font-weight: 800; letter-spacing: .02em; white-space: nowrap; }
+.common-header__nav { margin-left: auto; display: flex; align-items: center; gap: 30px; }
+.common-header__nav a, .common-header__account a, .common-header__user { font-size: 14px; font-weight: 600; }
+.common-header__nav a { position: relative; padding: 25px 0; }
+.common-header__nav a::after { content: ""; position: absolute; inset: auto 0 18px; height: 2px; background: #fff; transform: scaleX(0); transition: transform .2s ease; }
+.common-header__nav a:hover::after { transform: scaleX(1); }
+.common-header__account { display: flex; align-items: center; gap: 18px; }
+.common-header__signup { padding: 9px 14px; border: 1px solid rgba(255,255,255,.7); border-radius: 8px; }
+.common-header__user, .common-header__toggle, .common-header__mobile button { border: 0; background: transparent; color: inherit; cursor: pointer; }
+.common-header__toggle { display: none; padding: 8px; }
+.common-header__mobile { display: none; }
+
+@media (max-width: 900px) {
+  .common-header__inner { width: calc(100% - 32px); height: 64px; }
+  .common-header__nav, .common-header__account { display: none; }
+  .common-header__toggle { display: grid; place-items: center; margin-left: auto; }
+  .common-header__mobile { display: flex; flex-direction: column; gap: 4px; padding: 12px 16px 18px; background: rgba(3, 76, 140, .98); box-shadow: 0 14px 24px rgba(3,45,82,.2); }
+  .common-header__mobile > a, .common-header__mobile button { padding: 12px; text-align: left; font-weight: 600; }
+  .common-header__mobile-account { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.2); }
+  .common-header__mobile-account a { padding: 10px 12px; text-align: center; border: 1px solid rgba(255,255,255,.45); border-radius: 8px; }
+}

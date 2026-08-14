@@ -1,0 +1,11 @@
+/* 전역 리셋 — 기본 border/outline 색상 및 body 배경/글자색 */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
