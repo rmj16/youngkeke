@@ -1,10 +1,10 @@
-package com.youngkeke.admin;
+package com.airlab.admin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AdminApiApplicationTests {
+class AdminApplicationTests {
 
 	@Test
 	void contextLoads() {

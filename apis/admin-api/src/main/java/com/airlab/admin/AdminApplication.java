@@ -1,13 +1,13 @@
-package com.youngkeke.admin;
+package com.airlab.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AdminApiApplication {
+public class AdminApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AdminApiApplication.class, args);
+		SpringApplication.run(AdminApplication.class, args);
 	}
 
 }
