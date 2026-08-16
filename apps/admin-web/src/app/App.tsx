@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   Activity, BadgeCheck, Bell, BookOpenCheck, Building2, CalendarDays, Check,
   ChevronDown, ChevronRight, CircleHelp, Clock3, FileClock, Headphones,
@@ -63,12 +63,181 @@ const pageCopy: Record<PageId, { eyebrow: string; title: string; description: st
 
 function Brand({ dark = false }: { dark?: boolean }) { return <div className={`brand ${dark ? "brand--dark" : ""}`}><div className="brand__mark"><Plane size={23} /></div><div><strong>YOUNGKEKE AIR</strong><span>OPERATIONS CENTER</span></div></div> }
 
-function Login({ onLogin }: { onLogin: () => void }) {
-  const [id, setId] = useState("admin01");
-  const [password, setPassword] = useState("youngkeke2026");
-  const [showError, setShowError] = useState(false);
-  function submit(event: FormEvent) { event.preventDefault(); if (!id.trim() || !password.trim()) return setShowError(true); onLogin(); }
-  return <main className="login-shell"><section className="login-visual"><div className="login-visual__grid" /><Brand dark /><div className="login-visual__content"><span className="login-visual__label"><ShieldCheck size={16} /> SECURE OPERATIONS</span><h1>하늘 위 모든 운영을<br />하나의 화면에서.</h1><p>예약부터 운항, 고객문의와 협력사 업무까지<br />YOUNGKEKE AIR 통합 운영센터에서 안전하게 관리합니다.</p></div><div className="login-visual__status"><span><i /> 전체 시스템 정상</span><span>마지막 점검 2026.08.13 11:40</span></div></section><section className="login-panel"><div className="login-panel__inner"><div className="login-mobile-brand"><Brand /></div><span className="section-kicker">ADMIN CONSOLE</span><h2>관리자 로그인</h2><p className="login-lead">승인된 관리자 계정으로 로그인해주세요.</p><form onSubmit={submit} className="login-form"><label>관리자 ID<div className="field-with-icon"><UserRound size={18} /><input value={id} onChange={(e) => { setId(e.target.value); setShowError(false) }} placeholder="관리자 ID 입력" /></div></label><label>비밀번호<div className="field-with-icon"><ShieldCheck size={18} /><input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setShowError(false) }} placeholder="비밀번호 입력" /></div></label><div className="form-options"><label className="check-label"><input type="checkbox" defaultChecked /><span>아이디 저장</span></label><button type="button" className="text-button">비밀번호 찾기</button></div>{showError && <p className="form-error">관리자 ID와 비밀번호를 모두 입력해주세요.</p>}<button className="login-button" type="submit">로그인 <ChevronRight size={18} /></button></form><div className="demo-note"><CircleHelp size={17} /><span><strong>프론트엔드 데모</strong> 현재 입력된 계정으로 로그인할 수 있습니다.</span></div><p className="copyright">© 2026 YOUNGKEKE AIR. Authorized personnel only.</p></div></section></main>;
+type AdminSession = {
+  id: number;
+  loginId: string;
+  displayName: string;
+  role: string;
+};
+
+type ApiResponse<T> = {
+  success: boolean;
+  data: T | null;
+  message: string;
+  timestamp: string;
+};
+
+function Login({
+  onLogin,
+}: {
+  onLogin: (admin: AdminSession) => void;
+}) {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setErrorMessage("");
+
+    if (!id.trim() || !password) {
+      setErrorMessage("관리자 ID와 비밀번호를 모두 입력해주세요.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const response = await fetch("/api/admin/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          loginId: id.trim(),
+          password,
+        }),
+      });
+
+      const body =
+        (await response.json()) as ApiResponse<AdminSession>;
+
+      if (!response.ok || !body.success || !body.data) {
+        setErrorMessage(
+          body.message || "관리자 로그인에 실패했습니다.",
+        );
+        return;
+      }
+
+      setPassword("");
+      onLogin(body.data);
+    } catch {
+      setErrorMessage(
+        "관리자 서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <main className="login-shell">
+      <section className="login-visual">
+        <div className="login-visual__grid" />
+        <Brand dark />
+
+        <div className="login-visual__content">
+          <span className="login-visual__label">
+            <ShieldCheck size={16} />
+            SECURE OPERATIONS
+          </span>
+
+          <h1>
+            하늘 위 모든 운영을
+            <br />
+            하나의 화면에서.
+          </h1>
+
+          <p>
+            예약부터 운항, 고객문의와 협력사 업무까지
+            <br />
+            YOUNGKEKE AIR 통합 운영센터에서 관리합니다.
+          </p>
+        </div>
+
+        <div className="login-visual__status">
+          <span><i /> 관리자 보안 세션</span>
+          <span>YOUNGKEKE AIR</span>
+        </div>
+      </section>
+
+      <section className="login-panel">
+        <div className="login-panel__inner">
+          <div className="login-mobile-brand">
+            <Brand />
+          </div>
+
+          <span className="section-kicker">ADMIN CONSOLE</span>
+          <h2>관리자 로그인</h2>
+          <p className="login-lead">
+            승인된 관리자 계정으로 로그인해주세요.
+          </p>
+
+          <form onSubmit={submit} className="login-form">
+            <label>
+              관리자 ID
+              <div className="field-with-icon">
+                <UserRound size={18} />
+                <input
+                  value={id}
+                  autoComplete="username"
+                  onChange={(event) => {
+                    setId(event.target.value);
+                    setErrorMessage("");
+                  }}
+                  placeholder="관리자 ID 입력"
+                />
+              </div>
+            </label>
+
+            <label>
+              비밀번호
+              <div className="field-with-icon">
+                <ShieldCheck size={18} />
+                <input
+                  type="password"
+                  value={password}
+                  autoComplete="current-password"
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    setErrorMessage("");
+                  }}
+                  placeholder="비밀번호 입력"
+                />
+              </div>
+            </label>
+
+            {errorMessage && (
+              <p className="form-error">{errorMessage}</p>
+            )}
+
+            <button
+              className="login-button"
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? "로그인 확인 중..." : "로그인"}
+              {!submitting && <ChevronRight size={18} />}
+            </button>
+          </form>
+
+          <div className="demo-note">
+            <CircleHelp size={17} />
+            <span>
+              <strong>보안 세션 로그인</strong>
+              계정 정보는 브라우저에 저장하지 않습니다.
+            </span>
+          </div>
+
+          <p className="copyright">
+            © 2026 YOUNGKEKE AIR. Authorized personnel only.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
 }
 
 function Sidebar({ page, setPage, onLogout, open, onClose }: { page: PageId; setPage: (p: PageId) => void; onLogout: () => void; open: boolean; onClose: () => void }) {
@@ -106,4 +275,158 @@ function PartnersPage({partners,setPartners,addAudit,notify}:{partners:PartnerRe
 
 function AuditPage({audit}:{audit:AuditItem[]}){const[search,setSearch]=useState(""),[filter,setFilter]=useState("전체 결과");const filtered=audit.filter((x)=>(filter==="전체 결과"||x.result===filter)&&`${x.action}${x.target}${x.ip}`.toLowerCase().includes(search.toLowerCase()));return <section className="panel page-panel"><SectionTitle title="작업 이력" subtitle="중요 관리자 작업은 자동으로 기록됩니다."/><Toolbar value={search} setValue={setSearch} placeholder="작업 내용, 대상, IP 검색" filter={filter} setFilter={setFilter} options={["전체 결과","성공","실패"]}/><div className="audit-info"><ShieldCheck size={19}/><p><strong>감사 로그 안내</strong>작업 이력은 보안 정책에 따라 기록되며 임의로 수정하거나 삭제할 수 없습니다.</p></div><div className="table-wrap"><table><thead><tr><th>일시</th><th>관리자</th><th>작업 종류</th><th>작업 대상</th><th>접속 IP</th><th>결과</th></tr></thead><tbody>{filtered.length?filtered.map((x)=><tr key={x.id}><td>{x.time}</td><td><div className="person-cell"><span>김</span><strong>김관리</strong></div></td><td>{x.action}</td><td className="strong-cell">{x.target}</td><td className="mono-cell">{x.ip}</td><td><StatusPill value={x.result}/></td></tr>):<EmptyRow colSpan={6}/>}</tbody></table></div></section>}
 
-export default function App(){const[loggedIn,setLoggedIn]=useState(false),[page,setPage]=useState<PageId>("dashboard"),[sidebarOpen,setSidebarOpen]=useState(false),[inquiries,setInquiries]=useState(initialInquiries),[partners,setPartners]=useState(initialPartners),[audit,setAudit]=useState(initialAudit),[toast,setToast]=useState("");const title=useMemo(()=>pageCopy[page].title,[page]);function notify(m:string){setToast(m);window.setTimeout(()=>setToast(""),2800)}function addAudit(action:string,target:string){setAudit((items)=>[{id:Date.now(),action,target,time:"2026.08.13 11:50",result:"성공",ip:"10.10.40.21"},...items])}function login(){setLoggedIn(true);addAudit("관리자 로그인","admin01")}function logout(){setLoggedIn(false);setPage("dashboard")}if(!loggedIn)return <Login onLogin={login}/>;return <div className="admin-shell"><Sidebar page={page} setPage={setPage} onLogout={logout} open={sidebarOpen} onClose={()=>setSidebarOpen(false)}/><div className="admin-main"><Topbar onMenu={()=>setSidebarOpen(true)}/><main className="content" aria-label={title}><PageHeading page={page}/>{page==="dashboard"&&<Dashboard onNavigate={setPage} inquiries={inquiries} partners={partners}/>} {page==="reservations"&&<ReservationsPage/>}{page==="inquiries"&&<InquiriesPage inquiries={inquiries} setInquiries={setInquiries} addAudit={addAudit} notify={notify}/>} {page==="crew"&&<CrewPage/>}{page==="partners"&&<PartnersPage partners={partners} setPartners={setPartners} addAudit={addAudit} notify={notify}/>} {page==="audit"&&<AuditPage audit={audit}/>}</main></div>{toast&&<div className="toast"><Check size={18}/>{toast}</div>}</div>}
+export default function App() {
+  const [admin, setAdmin] = useState<AdminSession | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [page, setPage] = useState<PageId>("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [inquiries, setInquiries] = useState(initialInquiries);
+  const [partners, setPartners] = useState(initialPartners);
+  const [audit, setAudit] = useState(initialAudit);
+  const [toast, setToast] = useState("");
+
+  const title = useMemo(() => pageCopy[page].title, [page]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function restoreSession() {
+      try {
+        const response = await fetch("/api/admin/auth/me", {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const body =
+          (await response.json()) as ApiResponse<AdminSession>;
+
+        if (active && body.success && body.data) {
+          setAdmin(body.data);
+        }
+      } catch {
+        // 서버 연결 전에는 로그인 화면을 표시합니다.
+      } finally {
+        if (active) {
+          setCheckingSession(false);
+        }
+      }
+    }
+
+    restoreSession();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  function notify(message: string) {
+    setToast(message);
+    window.setTimeout(() => setToast(""), 2800);
+  }
+
+  function addAudit(action: string, target: string) {
+    setAudit((items) => [
+      {
+        id: Date.now(),
+        action,
+        target,
+        time: new Date().toLocaleString("ko-KR"),
+        result: "성공",
+        ip: "-",
+      },
+      ...items,
+    ]);
+  }
+
+  function login(session: AdminSession) {
+    setAdmin(session);
+  }
+
+  async function logout() {
+    try {
+      await fetch("/api/admin/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } finally {
+      setAdmin(null);
+      setPage("dashboard");
+    }
+  }
+
+  if (checkingSession) {
+    return (
+      <main className="login-shell">
+        <section className="login-panel">
+          <p>관리자 세션 확인 중...</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (!admin) {
+    return <Login onLogin={login} />;
+  }
+
+  return (
+    <div className="admin-shell">
+      <Sidebar
+        page={page}
+        setPage={setPage}
+        onLogout={logout}
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+
+      <div className="admin-main">
+        <Topbar onMenu={() => setSidebarOpen(true)} />
+
+        <main className="content" aria-label={title}>
+          <PageHeading page={page} />
+
+          {page === "dashboard" && (
+            <Dashboard
+              onNavigate={setPage}
+              inquiries={inquiries}
+              partners={partners}
+            />
+          )}
+
+          {page === "reservations" && <ReservationsPage />}
+
+          {page === "inquiries" && (
+            <InquiriesPage
+              inquiries={inquiries}
+              setInquiries={setInquiries}
+              addAudit={addAudit}
+              notify={notify}
+            />
+          )}
+
+          {page === "crew" && <CrewPage />}
+
+          {page === "partners" && (
+            <PartnersPage
+              partners={partners}
+              setPartners={setPartners}
+              addAudit={addAudit}
+              notify={notify}
+            />
+          )}
+
+          {page === "audit" && <AuditPage audit={audit} />}
+        </main>
+      </div>
+
+      {toast && (
+        <div className="toast">
+          <Check size={18} />
+          {toast}
+        </div>
+      )}
+    </div>
+  );
+}
