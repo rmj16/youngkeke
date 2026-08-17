@@ -14,11 +14,39 @@ import { Mail, Lock, Eye, EyeOff, Plane } from "lucide-react";
 export function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 프론트 전용: 실제 인증은 백엔드 연동 시 추가
-    navigate("/");
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/members/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+      const body = await response.json().catch(() => null) as {
+        success?: boolean;
+        message?: string;
+      } | null;
+
+      if (!response.ok || !body?.success) {
+        throw new Error(body?.message || "이메일 또는 비밀번호를 확인해 주세요.");
+      }
+
+      const redirect = new URLSearchParams(window.location.search).get("redirect");
+      navigate(redirect?.startsWith("/") ? redirect : "/");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "로그인에 실패했습니다.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -62,6 +90,8 @@ export function LoginPage() {
                     id="email"
                     type="email"
                     required
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
                     placeholder="you@example.com"
                     className="pl-10 h-12 border-2 hover:border-blue-300 focus:border-blue-500 transition-colors"
                   />
@@ -77,6 +107,8 @@ export function LoginPage() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     required
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                     placeholder="비밀번호 입력"
                     className="pl-10 pr-10 h-12 border-2 hover:border-blue-300 focus:border-blue-500 transition-colors"
                   />
@@ -102,13 +134,20 @@ export function LoginPage() {
                 </a>
               </div>
 
+              {error && (
+                <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {error}
+                </p>
+              )}
+
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   type="submit"
                   size="lg"
+                  disabled={submitting}
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 h-14 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  로그인
+                  {submitting ? "로그인 중..." : "로그인"}
                 </Button>
               </motion.div>
             </form>
