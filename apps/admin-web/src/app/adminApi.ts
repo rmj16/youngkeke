@@ -22,15 +22,13 @@ export type Inquiry = {
 };
 
 export type CrewMember = {
+  crewId: string;
   employeeNo: string;
   name: string;
-  role: string;
-  flight: string;
-  route: string;
-  duty: string;
-  passportStatus: string;
-  baggageStatus: string;
-  ticketStatus: string;
+  rank: string;
+  baseAirport: string;
+  phone: string;
+  status: string;
 };
 
 export type PartnerRequest = {
@@ -193,15 +191,13 @@ export async function saveInquiryAnswer(id: string, answer: string): Promise<voi
 export async function fetchCrew(): Promise<CrewMember[]> {
   const body = await request("/api/admin/crew");
   return rows(body, "crew", "members", "employees").map((item) => ({
+    crewId: text(item, "crewId", "crew_id", "id"),
     employeeNo: text(item, "employeeNo", "employee_no", "loginId"),
     name: text(item, "name", "crewName", "displayName"),
-    role: text(item, "role", "position"),
-    flight: text(item, "assignedFlightNo", "flightNo", "flight_no"),
-    route: text(item, "route"),
-    duty: text(item, "status", "dutyStatus", "duty_status"),
-    passportStatus: text(item, "passportStatus", "passport_status", "passportVerified"),
-    baggageStatus: text(item, "baggageStatus", "baggage_status"),
-    ticketStatus: text(item, "ticketStatus", "ticket_status", "ticketIssued"),
+    rank: text(item, "rank", "role", "position"),
+    baseAirport: text(item, "baseAirport", "base_airport"),
+    phone: text(item, "phone", "phoneNumber", "phone_number"),
+    status: text(item, "status", "dutyStatus", "duty_status"),
   }));
 }
 

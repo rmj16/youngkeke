@@ -51,27 +51,24 @@ booking API를 호출한다. 따라서 booking의 회원용 `JSESSIONID`를 전�
 
 | 관리자 웹 Endpoint | crew 서비스 요청 Endpoint | 기능 |
 | --- | --- | --- |
-| `GET /api/admin/crew` | `GET /api/admin/crew` | 직원·배정·업무 현황 |
-| `GET /api/admin/crew/flights` | `GET /api/admin/crew/flights` | 담당 항공편 현황 |
-| `GET /api/admin/crew/operations` | `GET /api/admin/crew/operations` | 처리 건수 집계 |
+| `GET /api/admin/crew` | `GET /api/admin/crew` | 승무원 직원 현황 |
+| `GET /api/admin/crew/flights?date=2026-09-01` | `GET /api/admin/flights?date=2026-09-01` | 날짜별 항공편 현황 |
 
-PC4가 제공할 최소 응답 필드:
+PC4가 8월 17일 확정한 승무원 응답 필드:
 
 ```json
 {
+  "crewId": "C1001",
   "employeeNo": "E2026001",
   "name": "직원명",
-  "role": "CREW",
-  "assignedFlightId": "FL001",
-  "assignedFlightNo": "YK081",
-  "status": "WORKING",
-  "passportStatus": "VERIFIED",
-  "baggageStatus": "COMPLETED",
-  "ticketStatus": "ISSUED"
+  "rank": "CREW",
+  "baseAirport": "ICN",
+  "phone": "010-0000-0000",
+  "status": "ACTIVE"
 }
 ```
 
-원본 여권번호는 관리자 응답에서 제외하고 확인 상태만 제공한다.
+승무원 API의 camelCase와 booking API의 snake_case 차이는 관리자 adapter에서 흡수한다. 원본 여권번호는 관리자 응답에 포함하지 않는다.
 
 ## 협력사 연동
 

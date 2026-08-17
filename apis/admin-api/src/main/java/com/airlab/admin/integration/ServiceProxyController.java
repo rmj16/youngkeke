@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriUtils;
 
@@ -92,8 +93,13 @@ public class ServiceProxyController {
     }
 
     @GetMapping("/crew/flights")
-    public ResponseEntity<String> crewFlights() {
-        return forward("GET", crewBaseUrl + "/api/admin/crew/flights", null);
+    public ResponseEntity<String> crewFlights(
+            @RequestParam(required = false) String date) {
+        String url = crewBaseUrl + "/api/admin/flights";
+        if (date != null && !date.isBlank()) {
+            url += "?date=" + UriUtils.encodeQueryParam(date, StandardCharsets.UTF_8);
+        }
+        return forward("GET", url, null);
     }
 
     @GetMapping("/crew/operations")
