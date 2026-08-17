@@ -9,5 +9,7 @@ export type Inquiry = {
   status: InquiryStatus;
   createdAt: string;
   customer: string;
+  answer?: string;
+  answeredAt?: string;
   userClosed?: boolean;
 };

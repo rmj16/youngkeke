@@ -122,7 +122,7 @@ export function MyPage() {
           <button className="brand" onClick={() => navigate("/")}>Garuda Indonesia</button>
           <nav className="desktop-nav">
             <button onClick={() => navigate("/")}>항공권 예약</button>
-            <button onClick={() => navigate("/inquiry")}>예약 조회</button>
+            <button onClick={() => navigate("/inquiry")}>고객지원</button>
             <button onClick={() => setActiveTab("booking")}>마이페이지</button>
           </nav>
           <div className="header-actions">
@@ -139,7 +139,7 @@ export function MyPage() {
         </div>
         <div id="mobileMenu" className={`mobile-menu ${mobileOpen ? "open" : ""}`}>
           <button onClick={() => { navigate("/"); }}>항공권 예약</button>
-          <button onClick={() => { navigate("/inquiry"); }}>예약 조회</button>
+          <button onClick={() => { navigate("/inquiry"); }}>고객지원</button>
           <button onClick={() => { setActiveTab("profile"); setMobileOpen(false); }}>회원정보</button>
           <button className="mobile-primary" onClick={() => navigate("/login")}>로그인</button>
         </div>

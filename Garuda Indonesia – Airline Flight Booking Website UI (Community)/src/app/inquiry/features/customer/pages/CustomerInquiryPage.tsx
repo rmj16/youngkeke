@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useState, type FormEvent } from "react";
 import { BrandMark } from "@inq/shared/components/BrandMark";
 import { faqCategories, faqs } from "@inq/shared/data/faqs";
+import type { InquiryInput, Member } from "@inq/shared/api/qnaApi";
 import type { Inquiry } from "@inq/shared/types/inquiry";
 
 type SupportPanel = "board" | "faq";
@@ -14,11 +15,6 @@ type InquiryForm = {
   content: string;
 };
 
-const CURRENT_USER = {
-  name: "김민지",
-  email: "minji.kim@example.com",
-};
-
 const EMPTY_FORM: InquiryForm = {
   category: "예약/결제",
   title: "",
@@ -28,11 +24,17 @@ const EMPTY_FORM: InquiryForm = {
 
 export function CustomerInquiryPage({
   inquiries,
-  save,
+  member,
+  createInquiry,
+  updateInquiry,
+  deleteInquiry,
   navigate,
 }: {
   inquiries: Inquiry[];
-  save: (items: Inquiry[]) => void;
+  member: Member;
+  createInquiry: (input: InquiryInput) => Promise<void>;
+  updateInquiry: (id: string, input: InquiryInput) => Promise<void>;
+  deleteInquiry: (id: string) => Promise<void>;
   navigate: (path: string) => void;
 }) {
   const [panel, setPanel] = useState<SupportPanel>("board");
@@ -45,11 +47,11 @@ export function CustomerInquiryPage({
   const [faqQuery, setFaqQuery] = useState("");
   const [faqCategory, setFaqCategory] = useState("전체");
   const [openedFaq, setOpenedFaq] = useState<number | null>(1);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [actionError, setActionError] = useState("");
 
-  const myInquiries = useMemo(
-    () => inquiries.filter((item) => item.email === CURRENT_USER.email),
-    [inquiries],
-  );
+  const myInquiries = inquiries;
 
   const visibleInquiries = useMemo(
     () =>
@@ -78,6 +80,7 @@ export function CustomerInquiryPage({
     setFormMode("create");
     setEditingId(null);
     setForm(EMPTY_FORM);
+    setFormError("");
     setFormOpen(true);
   };
 
@@ -90,6 +93,7 @@ export function CustomerInquiryPage({
       booking: item.booking === "-" ? "" : item.booking,
       content: item.content,
     });
+    setFormError("");
     setFormOpen(true);
   };
 
@@ -102,64 +106,46 @@ export function CustomerInquiryPage({
       booking: item.booking === "-" ? "" : item.booking,
       content: `기존 문의(${item.id})에 대해 추가로 문의드립니다.\n\n`,
     });
+    setFormError("");
     setFormOpen(true);
   };
 
-  const submitInquiry = (event: FormEvent) => {
+  const submitInquiry = async (event: FormEvent) => {
     event.preventDefault();
+    setSubmitting(true);
+    setFormError("");
 
-    if (formMode === "edit" && editingId) {
-      save(
-        inquiries.map((item) =>
-          item.id === editingId
-            ? {
-                ...item,
-                category: form.category,
-                title: form.title,
-                booking: form.booking || "-",
-                content: form.content,
-              }
-            : item,
-        ),
-      );
-    } else {
-      const now = new Date();
-      const newInquiry: Inquiry = {
-        id: `GA-${now.getFullYear()}-${String(now.getTime()).slice(-6)}`,
-        category: form.category,
-        title: form.title,
-        booking: form.booking || "-",
-        content: form.content,
-        email: CURRENT_USER.email,
-        customer: CURRENT_USER.name,
-        status: "접수",
-        createdAt: now.toLocaleString("ko-KR", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      save([newInquiry, ...inquiries]);
+    const input: InquiryInput = {
+      category: form.category,
+      reservationId: form.booking.trim() || undefined,
+      title: form.title.trim(),
+      question: form.content.trim(),
+    };
+
+    try {
+      if (formMode === "edit" && editingId) {
+        await updateInquiry(editingId, input);
+      } else {
+        await createInquiry(input);
+      }
+      setFormOpen(false);
+      setExpandedInquiry(null);
+    } catch (cause) {
+      setFormError(cause instanceof Error ? cause.message : "문의 저장에 실패했습니다.");
+    } finally {
+      setSubmitting(false);
     }
-
-    setFormOpen(false);
-    setExpandedInquiry(null);
   };
 
-  const deleteInquiry = (item: Inquiry) => {
+  const removeInquiry = async (item: Inquiry) => {
     if (!window.confirm(`“${item.title}” 문의를 삭제하시겠습니까?`)) return;
-    save(inquiries.filter((inquiry) => inquiry.id !== item.id));
-    setExpandedInquiry(null);
-  };
-
-  const completeInquiry = (item: Inquiry) => {
-    save(
-      inquiries.map((inquiry) =>
-        inquiry.id === item.id ? { ...inquiry, userClosed: true } : inquiry,
-      ),
-    );
+    setActionError("");
+    try {
+      await deleteInquiry(item.id);
+      setExpandedInquiry(null);
+    } catch (cause) {
+      setActionError(cause instanceof Error ? cause.message : "문의 삭제에 실패했습니다.");
+    }
   };
 
   const progressCount = myInquiries.filter((item) => item.status !== "답변 완료").length;
@@ -177,8 +163,8 @@ export function CustomerInquiryPage({
           <button className="active">고객지원</button>
         </nav>
         <div className="support-user">
-          <span>김</span>
-          <div><strong>{CURRENT_USER.name}</strong><small>Youngkeke Miles 회원</small></div>
+          <span>{member.name.slice(0, 1)}</span>
+          <div><strong>{member.name}</strong><small>{member.email}</small></div>
         </div>
       </header>
 
@@ -240,6 +226,7 @@ export function CustomerInquiryPage({
               </div>
 
               <div className="customer-board-wrap">
+                {actionError && <div className="customer-form-error">{actionError}</div>}
                 <table className="customer-board">
                   <thead><tr><th>No.</th><th>제목</th><th>문의 유형</th><th>등록일</th><th>처리상태</th><th>관리</th></tr></thead>
                   <tbody>
@@ -257,17 +244,15 @@ export function CustomerInquiryPage({
                             <td>
                               <div className="row-actions">
                                 {!completed ? (
-                                  <><button onClick={() => openEditForm(item)}>수정</button><button className="danger" onClick={() => deleteInquiry(item)}>삭제</button></>
-                                ) : item.userClosed ? (
-                                  <button disabled>확인됨</button>
+                                  <><button onClick={() => openEditForm(item)}>수정</button><button className="danger" onClick={() => void removeInquiry(item)}>삭제</button></>
                                 ) : (
-                                  <><button onClick={() => openReaskForm(item)}>재문의</button><button className="complete" onClick={() => completeInquiry(item)}>완료</button></>
+                                  <><button onClick={() => openReaskForm(item)}>재문의</button><button className="complete" disabled>답변 완료</button></>
                                 )}
                               </div>
                             </td>
                           </tr>
                           {expandedInquiry === item.id && (
-                            <tr className="board-detail-row"><td colSpan={6}><div><span>문의 내용</span><p>{item.content}</p>{completed && <section><strong>고객센터 답변</strong><p>문의해 주신 내용을 확인하여 안내를 완료했습니다. 추가 확인이 필요한 경우 재문의를 등록해 주세요.</p></section>}</div></td></tr>
+                            <tr className="board-detail-row"><td colSpan={6}><div><span>문의 내용</span><p>{item.content}</p>{completed && <section><strong>고객센터 답변</strong><p>{item.answer || "답변 내용이 등록되지 않았습니다."}</p>{item.answeredAt && <small>{item.answeredAt}</small>}</section>}</div></td></tr>
                           )}
                         </Fragment>
                       );
@@ -289,12 +274,13 @@ export function CustomerInquiryPage({
           <section className="customer-modal" role="dialog" aria-modal="true" aria-labelledby="inquiry-form-title" onMouseDown={(event) => event.stopPropagation()}>
             <div className="customer-modal-head"><div><span>1:1 INQUIRY</span><h2 id="inquiry-form-title">{formMode === "edit" ? "문의 수정" : formMode === "reask" ? "재문의 작성" : "새 문의 작성"}</h2></div><button onClick={() => setFormOpen(false)} aria-label="닫기">×</button></div>
             <form onSubmit={submitInquiry}>
-              <div className="modal-account"><span>문의 계정</span><strong>{CURRENT_USER.name}</strong><small>{CURRENT_USER.email}</small></div>
+              <div className="modal-account"><span>문의 계정</span><strong>{member.name}</strong><small>{member.email}</small></div>
               <label>문의 유형<select value={form.category} onChange={(event) => updateForm("category", event.target.value)}><option>예약/결제</option><option>변경/환불</option><option>수하물</option><option>공항/탑승</option><option>회원/마일리지</option><option>기타</option></select></label>
               <label>제목<input value={form.title} onChange={(event) => updateForm("title", event.target.value)} placeholder="문의 제목을 입력해 주세요" required /></label>
-              <label>예약번호 <span>(선택)</span><input value={form.booking} onChange={(event) => updateForm("booking", event.target.value.toUpperCase())} placeholder="예: GA4K2P" maxLength={8} /></label>
+              <label>예약번호 <span>(선택)</span><input value={form.booking} onChange={(event) => updateForm("booking", event.target.value.toUpperCase())} placeholder="예: X7K2P9" maxLength={6} /></label>
               <label>문의 내용<textarea value={form.content} onChange={(event) => updateForm("content", event.target.value)} placeholder="문의 내용을 자세히 입력해 주세요" maxLength={1000} required /><small className="modal-counter">{form.content.length} / 1,000</small></label>
-              <div className="modal-buttons"><button type="button" onClick={() => setFormOpen(false)}>취소</button><button type="submit">{formMode === "edit" ? "수정 저장" : "문의 등록"}</button></div>
+              {formError && <p className="customer-form-error">{formError}</p>}
+              <div className="modal-buttons"><button type="button" onClick={() => setFormOpen(false)} disabled={submitting}>취소</button><button type="submit" disabled={submitting}>{submitting ? "처리 중..." : formMode === "edit" ? "수정 저장" : "문의 등록"}</button></div>
             </form>
           </section>
         </div>

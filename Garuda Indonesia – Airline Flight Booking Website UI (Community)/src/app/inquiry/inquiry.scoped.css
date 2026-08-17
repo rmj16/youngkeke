@@ -21,3 +21,9 @@
 .inq-root .admin-topbar .top-actions>button{color:#fff}
 .inq-root .admin-topbar .admin-search{color:#dbe7f5;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.1)}
 .inq-root .admin-topbar .admin-search input{color:#fff;background:transparent}
+
+/* 실제 booking Q&A API 연동 상태 */
+.inq-root .customer-api-notice{min-height:65vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px;text-align:center;color:#405064;background:#f5f7fa}
+.inq-root .customer-api-notice.error strong{color:#b42318}
+.inq-root .customer-api-notice button{padding:10px 18px;border:0;border-radius:5px;background:#117b94;color:#fff;font-weight:700}
+.inq-root .customer-form-error{margin:10px 0;padding:11px 13px;border:1px solid #f1b7b2;border-radius:5px;background:#fff3f2;color:#b42318;font-size:11px}

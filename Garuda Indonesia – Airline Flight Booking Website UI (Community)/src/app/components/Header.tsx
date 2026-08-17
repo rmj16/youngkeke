@@ -183,7 +183,7 @@ export function Header() {
               <div className="space-y-4">
                 {[
                   { name: "항공권 예약", id: "book" },
-                  { name: "예약 조회", path: "/inquiry" },
+                  { name: "고객지원", path: "/inquiry" },
                   { name: "취항지", id: "destinations" },
                   { name: "회사소개", id: "about" },
                   { name: "마이페이지", path: "/mypage" },
