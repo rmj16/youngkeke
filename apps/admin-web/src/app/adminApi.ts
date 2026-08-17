@@ -86,6 +86,31 @@ function rows(body: unknown, ...keys: string[]): unknown[] {
   return [];
 }
 
+function formatKstDateTime(source: unknown): string {
+  const raw = source === undefined || source === null ? "" : String(source).trim();
+  if (!raw || raw === "-") return "-";
+
+  // admin_db stores audit DATETIME values in UTC. A DATETIME value has no
+  // offset, so explicitly treat an offset-less API value as UTC before
+  // rendering it in the service's fixed Asia/Seoul timezone.
+  const hasOffset = /(?:Z|[+-]\d{2}:\d{2})$/i.test(raw);
+  const parsed = new Date(hasOffset ? raw : `${raw}Z`);
+  if (Number.isNaN(parsed.getTime())) return raw;
+
+  const formatted = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(parsed);
+
+  return `${formatted} KST`;
+}
+
 async function request(path: string, init?: RequestInit): Promise<unknown> {
   const response = await fetch(path, {
     credentials: "include",
@@ -215,7 +240,7 @@ export async function fetchAuditLogs(): Promise<AuditItem[]> {
     action: text(item, "actionType", "action_type", "action"),
     target: text(item, "targetId", "target_id", "target"),
     detail: text(item, "detail"),
-    time: text(item, "createdAt", "created_at", "time"),
+    time: formatKstDateTime(value(item, "createdAt", "created_at", "time")),
     result: text(item, "result"),
     ip: text(item, "clientIp", "client_ip", "ip"),
   }));
