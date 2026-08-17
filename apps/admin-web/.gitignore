@@ -8,5 +8,9 @@ dist/
 *.log
 npm-debug.log*
 
+# local environment
+.env.local
+.env.*.local
+
 # editor / OS
 .DS_Store
