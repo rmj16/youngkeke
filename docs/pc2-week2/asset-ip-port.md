@@ -12,6 +12,21 @@
 | SEC-01 | pfSense | 구역별 `.1` | 방화벽·라우팅 | MGMT 실제값 최종 확인 필요 |
 | SEC-02 | Wazuh | Tailscale `100.117.65.81` | Manager·Indexer·Dashboard 4.14 | 1514·1515 포워딩 완료 |
 
+## 내부 서비스 도메인
+
+| 서비스 | 내부 도메인 | 실제 WEB/WAS 경로 |
+|---|---|---|
+| 예약 | `booking.airlab.test` | UNIX-01 Apache → UNIX-03 Tomcat `/booking` |
+| 승무원 | `crew.airlab.test` | UNIX-01 Apache → UNIX-03 Tomcat `/crew` |
+| 협력사 | `partner.airlab.test` | UNIX-02 Apache → 협력사 API `/admin-api` |
+| 관리자 | `admin.airlab.test` | UNIX-02 Apache → UNIX-03 WildFly `/admin` |
+
+도메인은 Apache 이름 기반 가상호스트이므로 IP로 직접 호출하면 다른 사이트로
+라우팅될 수 있다. 원격 개발 시 PC2는 `127.0.0.1 admin.airlab.test`와 SSH 터널
+`127.0.0.1:8082 → UNIX-02:80`을 사용한다. UNIX-03의 관리자 백엔드가 협력사
+API를 호출하려면 UNIX-03에서도 `10.10.10.12 partner.airlab.test`를 해석할 수
+있어야 한다.
+
 ## 서비스망
 
 | 구역 | 대역 | 설계 게이트웨이 |

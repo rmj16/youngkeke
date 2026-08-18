@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-set "ADMIN_HOST=admin.youngkeke-air"
+set "ADMIN_HOST=admin.airlab.test"
 set "ADMIN_URL=http://%ADMIN_HOST%:5173"
 set "HOSTS_FILE=%SystemRoot%\System32\drivers\etc\hosts"
 

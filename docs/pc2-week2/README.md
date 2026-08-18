@@ -11,6 +11,8 @@
 - UNIX-04 MySQL `admin_db`, `admin_user`, 관리자 계정·감사 로그 구축
 - 로그인·세션·새로고침 유지·로그아웃과 KST 감사 로그 구현
 - booking 예약·Q&A API 실연동
+- partner 협력사 요청 목록·승인·반려 API 명세 반영
+- 내부 서비스 도메인을 `booking/crew/partner/admin.airlab.test`로 통일
 - 고객 문의 등록 → 관리자 답변 → 고객 답변 확인 왕복 검증
 - 예약·문의·승무원·협력사·감사 로그를 페이지당 10건으로 표시
 - 고객 문의는 목록과 답변 모달을 분리
@@ -64,9 +66,8 @@ PC4가 Tomcat 11.0.24와 `crew.war`를 구성했으며 관리자 서비스는 �
 
 ## 남은 공동 작업
 
-- PC1 협력사 관리자 API 명세·배포
-- PC4 crew API 실배포 후 관리자 화면 200 응답 검증
-- WIN-01 Wazuh Agent 등록과 Dashboard 수신 확인
+- PC1 협력사 API의 UNIX-03 경유 목록·승인·반려 HTTP 200 최종 증빙
+- PC4 Wazuh Dashboard에서 `win-web01` Active 최종 캡처
 - 실제 pfSense MGMT 정책 확정 및 전체 재부팅 시험
 - 팀 전용 브랜치 검토 후 `integration` PR 병합
 

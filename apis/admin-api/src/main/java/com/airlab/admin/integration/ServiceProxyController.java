@@ -8,6 +8,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -109,25 +110,38 @@ public class ServiceProxyController {
 
     @GetMapping("/partner/requests")
     public ResponseEntity<String> partnerRequests() {
-        return forward("GET", partnerBaseUrl + "/api/admin/partner/requests", null);
+        return forward("GET", partnerBaseUrl + "/partner/requests", null);
     }
 
     @GetMapping("/partner/requests/{id}")
     public ResponseEntity<String> partnerRequest(@PathVariable String id) {
-        return forward("GET", partnerBaseUrl + "/api/admin/partner/requests/" + path(id), null);
+        return forward("GET", partnerBaseUrl + "/partner/requests/" + path(id), null);
     }
 
     @PatchMapping("/partner/requests/{id}/status")
     public ResponseEntity<String> changePartnerRequestStatus(
             @PathVariable String id,
-            @RequestBody String body,
+            @RequestBody PartnerStatusRequest body,
             HttpServletRequest request) {
+        String status = body.status() == null
+                ? ""
+                : body.status().trim().toUpperCase(Locale.ROOT);
+        if (!status.equals("APPROVED") && !status.equals("REJECTED")) {
+            return ResponseEntity.badRequest()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("{\"success\":false,\"data\":null,\"message\":\"status는 APPROVED 또는 REJECTED여야 합니다.\"}");
+        }
+
+        String statusQuery = UriUtils.encodeQueryParam(status, StandardCharsets.UTF_8);
         ResponseEntity<String> response = forward(
                 "PATCH",
-                partnerBaseUrl + "/api/admin/partner/requests/" + path(id) + "/status",
-                body);
+                partnerBaseUrl + "/partner/requests/" + path(id) + "/status?status=" + statusQuery,
+                null);
         recordWrite(request, "PARTNER_REQUEST_STATUS", "PARTNER_REQUEST", id, response);
         return response;
+    }
+
+    private record PartnerStatusRequest(String status, String reason) {
     }
 
     private ResponseEntity<String> forward(String method, String url, String body) {
