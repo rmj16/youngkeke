@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="영크크항공 외부 협력사 업무 포털">
+  <title>영크크항공 협력사 포털</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <main id="loginPage" class="login-page">
+    <section class="login-visual" aria-label="영크크항공 협력 운영 네트워크 소개">
+      <div class="brand"><span class="brand-mark">Y</span><span>YOUNGKK AIR</span></div>
+      <div class="visual-copy">
+        <p class="eyebrow">PARTNER OPERATIONS NETWORK</p>
+        <h1>항공 운영의 완성,<br>파트너와 함께.</h1>
+        <p>기내식부터 객실 서비스와 현장 정비까지, 모든 협력 업무를 하나의 안전한 운영 네트워크에서 연결합니다.</p>
+        <div class="visual-tags"><span>WORK ORDER</span><span>CREW NOTIFICATION</span><span>AUDIT LOG</span></div>
+      </div>
+      <p class="visual-foot">AUTHORIZED PARTNERS ONLY · ACCESS AND ACTIVITY ARE MONITORED</p>
+    </section>
+
+    <section class="login-panel">
+      <div class="login-box">
+        <div class="login-heading">
+          <div><p class="eyebrow dark">PARTNER ACCESS</p><h2>협력사 계정 로그인</h2></div>
+          <span class="online"><i></i>SYSTEM ONLINE</span>
+        </div>
+        <p class="login-description">등록된 계정으로 로그인하면 서버가 소속 협력사와 접근 권한을 확인합니다.</p>
+        <form id="loginForm" novalidate>
+          <label for="loginId">아이디</label>
+          <input id="loginId" name="loginId" autocomplete="username" required>
+          <label for="loginPassword">비밀번호</label>
+          <input id="loginPassword" name="loginPassword" type="password" autocomplete="current-password" required>
+          <div class="login-options"><label class="check"><input id="rememberId" type="checkbox"> 아이디 저장</label><button class="link-button" type="button" id="passwordHelp">비밀번호 찾기</button></div>
+          <p id="loginError" class="form-error" role="alert"></p>
+          <button class="primary-button" type="submit">로그인</button>
+        </form>
+        <div class="demo-accounts">
+          <p>발표용 계정</p>
+          <div class="account-buttons">
+            <button type="button" data-demo="catering"><b>케이터링</b><small>catering_demo</small></button>
+            <button type="button" data-demo="clean"><b>클린</b><small>clean_demo</small></button>
+            <button type="button" data-demo="tech"><b>테크</b><small>tech_demo</small></button>
+          </div>
+        </div>
+        <footer class="login-footer"><span>YOUNGKK AIR · PARTNER HUB</span><span>SECURE ACCESS / v1.0</span></footer>
+      </div>
+    </section>
+  </main>
+
+  <div id="portal" class="portal hidden">
+    <header class="topbar">
+      <a class="top-brand" href="#dashboard"><span class="brand-mark small">Y</span><span>YOUNGKK AIR</span><em>PARTNER HUB</em></a>
+      <div class="top-actions"><span id="systemClock"></span><button id="notificationButton" class="icon-button" aria-label="알림">🔔<b id="notificationCount">0</b></button><button id="logoutButton" class="logout-button">로그아웃</button></div>
+    </header>
+    <div class="portal-grid">
+      <aside class="sidebar">
+        <div class="partner-card"><span>LOGGED IN PARTNER</span><strong id="sidePartnerName"></strong><small id="sidePartnerArea"></small></div>
+        <nav id="sideNav">
+          <button data-page="dashboard">작업 대시보드</button>
+          <button data-page="history">완료 이력</button>
+          <button data-page="manual">안전 매뉴얼</button>
+          <button data-page="notice">공지사항</button>
+          <button data-page="delivery">서비스 전달 현황 <b id="deliveryBadge">0</b></button>
+          <button data-page="company">자사정보 관리</button>
+        </nav>
+        <div class="sidebar-foot"><i></i> SECURE SESSION</div>
+      </aside>
+      <section id="content" class="content" tabindex="-1"></section>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card"><button class="modal-close" aria-label="닫기">×</button><div id="modalBody"></div></div>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+<script src="assets/js/config.js"></script>
+<script src="assets/app.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

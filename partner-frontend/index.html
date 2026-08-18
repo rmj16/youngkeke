@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="영크크항공 협력사 업무 포털 로그인">
+  <title>영크크항공 협력사 포털</title>
+  <link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body>
+  <main class="login-layout">
+    <section class="brand-panel" aria-label="영크크항공 협력사 포털 소개">
+      <a class="brand" href="index.html" aria-label="영크크항공 협력사 포털 홈">
+        <span class="brand-mark">Y</span>
+        <span>YOUNGKK AIR</span>
+      </a>
+
+      <div class="hero-copy">
+        <p class="eyebrow">PARTNER OPERATIONS NETWORK</p>
+        <h1>항공 운영의 완성,<br>파트너와 함께.</h1>
+        <p class="hero-description">
+          기내식부터 객실 서비스와 현장 정비까지,<br>
+          모든 협력 업무를 하나의 안전한 운영 네트워크에서 연결합니다.
+        </p>
+        <ul class="service-labels" aria-label="주요 기능">
+          <li>WORK ORDER</li>
+          <li>CREW NOTIFICATION</li>
+          <li>AUDIT LOG</li>
+        </ul>
+      </div>
+
+      <p class="security-note">AUTHORIZED PARTNERS ONLY · ACCESS AND ACTIVITY ARE MONITORED</p>
+    </section>
+
+    <section class="form-panel">
+      <div class="login-card">
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow dark">PARTNER ACCESS</p>
+            <h2>협력사 계정 로그인</h2>
+          </div>
+          <span class="online"><i></i>SYSTEM ONLINE</span>
+        </div>
+
+        <p class="intro">등록된 계정으로 로그인하면 소속 협력사와 접근 권한을 확인합니다.</p>
+
+        <form id="partnerLoginForm" novalidate>
+          <label for="username">아이디</label>
+          <input id="username" name="username" type="text" autocomplete="username" required>
+
+          <label for="password">비밀번호</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+          <div class="form-options">
+            <label class="remember"><input id="rememberId" type="checkbox"> 아이디 저장</label>
+            <span>계정 문의: 영크크항공 운영관리자</span>
+          </div>
+
+          <button id="loginButton" type="submit">로그인</button>
+          <p id="loginMessage" class="message" role="alert" aria-live="polite"></p>
+        </form>
+
+        <footer>
+          <span>YOUNGKK AIR · PARTNER HUB</span>
+          <span>SECURE ACCESS / v1.0</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/login.js"></script>
+</body>
+</html>
