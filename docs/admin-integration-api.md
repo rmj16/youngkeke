@@ -40,6 +40,46 @@ PC3 실제 배포 소스 기준 확정 사항:
 - Q&A 작성자명: `author_name`
 - booking의 `/api/admin/**`에는 인증이 의도적으로 적용되지 않음
 
+### PC3 booking 최종 계약 반영 (2026-08-18)
+
+PC3가 PC4 승무원 서비스에 전달한 최종 계약도 동일한 booking 배포 주소와
+공통 응답 래퍼를 사용한다.
+
+PC3 담당자 공유 기준으로 `booking.war`와 예약 프론트엔드의 최종 배포가
+완료되었다. PC2 관리자 서비스는 기존 관리자용 예약·Q&A API 경로를 그대로
+사용하므로 이 완료 건으로 `admin.war`나 관리자 React를 다시 배포할 필요는 없다.
+최종 통합시험에서는 관리자 예약 목록과 Q&A가 HTTP 200이고 실제 데이터가
+표시되는지만 재확인한다.
+
+```text
+Base URL: http://10.10.20.11:8080/booking
+공통 응답: { success, data, message, timestamp }
+요청 body: camelCase
+응답 data: snake_case
+```
+
+관리자 예약 목록 adapter는 다음 최종 필드를 모두 수용한다.
+
+```text
+reservation_id
+flight_id
+flight_no
+member_id
+passenger_names 또는 passengers[].name
+seat_no
+baggage_option
+status
+booked_at 또는 depart_at
+origin / destination
+```
+
+PC3의 이번 최종본은 **crew 연동용 계약**이므로 관리자 React가 직접 호출할
+경로는 추가되지 않았다. 관리자는 기존처럼 `GET /api/admin/reservations`와
+Q&A API를 사용한다. 좌석·수하물·운항상태 쓰기 API는 PC4 crew 화면의 책임이다.
+
+crew가 사용할 booking 최종 엔드포인트와 상태값은
+[`booking-crew-api-final.md`](./booking-crew-api-final.md)에 별도로 정리했다.
+
 booking 관리자 API가 무인증인 것은 취약점 시연용 설계다. 브라우저가 booking을
 직접 호출하게 두지 않고, `admin.war`가 자체 관리자 세션을 먼저 검증한 뒤 내부
 booking API를 호출한다. 따라서 booking의 회원용 `JSESSIONID`를 전달하지 않는다.
