@@ -36,7 +36,9 @@ PC4가 Tomcat 11.0.24와 `crew.war`를 구성했으며 관리자 서비스는 �
 | Method | Endpoint | 용도 |
 |---|---|---|
 | GET | `/api/admin/crew` | 승무원 직원 현황 |
-| GET | `/api/admin/flights?date=2026-09-01` | 날짜별 항공편 현황 |
+| GET | `/api/flights/{flightId}/crew` | 항공편 편성 승무원 명단 |
+
+항공편 자체 정보는 crew 서비스가 중복 제공하지 않는다. PC3 booking 서비스의 `GET /api/flights/{flightId}`를 사용한다.
 
 승무원 응답의 `crewId`, `employeeNo`, `name`, `rank`, `baseAirport`, `phone`, `status` camelCase는 관리자 React adapter가 직접 수용한다. booking의 snake_case와 형식을 억지로 하나로 바꾸지 않고 서비스 경계에서 변환한다.
 
